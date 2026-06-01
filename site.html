@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cricfast E-Books | Digital Cricket Guides</title>
+  <meta name="description" content="Cricfast E-Books offers clean cricket learning guides with online reading and PDF download options." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    :root {
+      --blue: #145cff;
+      --blue-dark: #071f6b;
+      --sky: #36d7ff;
+      --ink: #06142e;
+      --soft: #eef6ff;
+      --text: #14213d;
+      --muted: #667085;
+      --white: #ffffff;
+      --line: #dbeafe;
+      --glass: rgba(255, 255, 255, 0.12);
+      --shadow: 0 28px 80px rgba(20, 92, 255, 0.16);
+      --radius: 30px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Manrope, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 8% 8%, rgba(54, 215, 255, .18), transparent 28%),
+        radial-gradient(circle at 90% 4%, rgba(20, 92, 255, .12), transparent 30%),
+        #f7fbff;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { width: 100%; display: block; }
+    .container { width: min(1180px, 92%); margin: 0 auto; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, .84);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(20, 92, 255, .12);
+    }
+
+    .nav {
+      height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      color: var(--ink);
+      letter-spacing: -.045em;
+      font-size: 22px;
+    }
+
+    .brand-icon {
+      width: 50px;
+      height: 50px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      color: white;
+      background:
+        linear-gradient(135deg, var(--blue), var(--sky));
+      box-shadow: 0 18px 35px rgba(20, 92, 255, .26);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-icon::after {
+      content: "";
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      position: absolute;
+      right: -7px;
+      bottom: -5px;
+      border: 3px solid rgba(255,255,255,.55);
+    }
+
+    .brand-icon strong { position: relative; z-index: 2; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #26344f;
+    }
+
+    .nav-links a { opacity: .86; transition: .22s ease; }
+    .nav-links a:hover { opacity: 1; color: var(--blue); }
+
+    .nav-btn {
+      padding: 13px 20px;
+      border-radius: 999px;
+      color: white !important;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      box-shadow: 0 16px 34px rgba(20,92,255,.25);
+    }
+
+    .menu-btn {
+      display: none;
+      border: 0;
+      background: var(--ink);
+      color: white;
+      padding: 12px 15px;
+      border-radius: 14px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 790px;
+      padding: 96px 0 90px;
+      color: white;
+      background:
+        linear-gradient(110deg, rgba(6,20,46,.96) 0%, rgba(7,31,107,.88) 54%, rgba(20,92,255,.74) 100%),
+        url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1800&q=90') center/cover;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+      background-size: 54px 54px;
+      opacity: .58;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 760px;
+      height: 760px;
+      right: -270px;
+      top: -230px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(54,215,255,.38), transparent 63%);
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 46px;
+      align-items: center;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.22);
+      font-weight: 900;
+      margin-bottom: 22px;
+      color: #e9f8ff;
+    }
+
+    .hero h1 {
+      font-size: clamp(44px, 6vw, 84px);
+      line-height: .96;
+      letter-spacing: -.08em;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 span {
+      color: var(--sky);
+      text-shadow: 0 0 30px rgba(54,215,255,.48);
+    }
+
+    .hero p {
+      max-width: 650px;
+      color: #d9ecff;
+      line-height: 1.8;
+      font-size: 18px;
+      margin-bottom: 34px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 0;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 15px 24px;
+      border-radius: 999px;
+      font-weight: 900;
+      transition: .25s ease;
+      font-size: 15px;
+    }
+
+    .btn:hover { transform: translateY(-3px); }
+    .btn-primary {
+      color: white;
+      background: linear-gradient(135deg, var(--blue), var(--sky));
+      box-shadow: 0 20px 42px rgba(54,215,255,.26);
+    }
+    .btn-glass {
+      color: white;
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.24);
+    }
+    .btn-blue {
+      color: white;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      box-shadow: 0 16px 35px rgba(20,92,255,.25);
+    }
+    .btn-outline {
+      color: var(--blue-dark);
+      background: white;
+      border: 1px solid var(--line);
+    }
+
+    .hero-panel {
+      position: relative;
+      min-height: 560px;
+      border-radius: 42px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.07));
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 32px 100px rgba(0,0,0,.3);
+      backdrop-filter: blur(14px);
+      overflow: hidden;
+      padding: 24px;
+    }
+
+    .mock-book {
+      position: absolute;
+      width: 330px;
+      height: 440px;
+      border-radius: 28px;
+      background:
+        linear-gradient(140deg, rgba(54,215,255,.95), rgba(20,92,255,.96) 45%, rgba(6,20,46,.98));
+      box-shadow: 0 24px 60px rgba(0,0,0,.3);
+      border: 1px solid rgba(255,255,255,.24);
+      padding: 26px;
+      overflow: hidden;
+    }
+
+    .mock-book::before {
+      content: "";
+      position: absolute;
+      inset: -80px -80px auto auto;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.2);
+    }
+
+    .mock-book.one { left: 28px; top: 50px; transform: rotate(-7deg); }
+    .mock-book.two { right: 30px; top: 120px; transform: rotate(8deg); background: linear-gradient(140deg, #071f6b, #145cff, #36d7ff); }
+    .mock-book.three { left: 135px; bottom: 42px; transform: rotate(1deg); background: linear-gradient(140deg, #091a3b, #145cff 60%, #36d7ff); }
+
+    .mock-book h3 {
+      position: relative;
+      z-index: 2;
+      color: white;
+      font-size: 30px;
+      line-height: 1.05;
+      letter-spacing: -.055em;
+      margin-bottom: 18px;
+    }
+    .mock-book p {
+      position: relative;
+      z-index: 2;
+      color: #e6f7ff;
+      font-size: 13px;
+      line-height: 1.55;
+      margin: 0;
+    }
+    .book-lines {
+      position: absolute;
+      left: 26px;
+      right: 26px;
+      bottom: 28px;
+      display: grid;
+      gap: 9px;
+    }
+    .book-lines span {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.32);
+    }
+    .book-lines span:nth-child(2) { width: 78%; }
+    .book-lines span:nth-child(3) { width: 54%; }
+
+    .stats-wrap {
+      margin-top: -54px;
+      position: relative;
+      z-index: 4;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      padding: 28px;
+      border-radius: 34px;
+      background: rgba(255,255,255,.94);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+    .stat {
+      padding: 20px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #f7fbff, #ffffff);
+      border: 1px solid var(--line);
+    }
+    .stat h3 {
+      font-size: 34px;
+      letter-spacing: -.06em;
+      color: var(--blue);
+    }
+    .stat p {
+      color: var(--muted);
+      font-weight: 850;
+      margin-top: 5px;
+    }
+
+    section { padding: 94px 0; }
+    .section-head {
+      max-width: 780px;
+      text-align: center;
+      margin: 0 auto 48px;
+    }
+    .kicker {
+      color: var(--blue);
+      font-weight: 900;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    .section-head h2 {
+      color: var(--ink);
+      font-size: clamp(34px, 4vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -.07em;
+      margin-bottom: 16px;
+    }
+    .section-head p {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.75;
+    }
+
+    .ebooks-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 26px;
+    }
+    .ebook {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 18px 50px rgba(15,23,42,.08);
+      transition: .28s ease;
+    }
+    .ebook:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 30px 75px rgba(20,92,255,.16);
+    }
+
+    .cover {
+      min-height: 270px;
+      position: relative;
+      overflow: hidden;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: white;
+      background:
+        radial-gradient(circle at 85% 10%, rgba(54,215,255,.48), transparent 34%),
+        linear-gradient(135deg, #06142e, #145cff);
+    }
+    .cover::before {
+      content: "";
+      position: absolute;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      right: -58px;
+      bottom: -70px;
+      border: 22px solid rgba(255,255,255,.08);
+    }
+    .cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .cover-label,
+    .cover-title,
+    .cover-bottom {
+      position: relative;
+      z-index: 2;
+    }
+    .cover-label {
+      display: inline-flex;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.2);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .cover-title h3 {
+      font-size: 34px;
+      line-height: 1.02;
+      letter-spacing: -.07em;
+      max-width: 260px;
+    }
+    .cover-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 900;
+      color: #dff6ff;
+    }
+
+    .ebook-body { padding: 24px; }
+    .ebook-body h3 {
+      color: var(--ink);
+      font-size: 22px;
+      letter-spacing: -.045em;
+      margin-bottom: 10px;
+    }
+    .ebook-body p {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--blue-dark);
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .about {
+      background:
+        radial-gradient(circle at 12% 20%, rgba(54,215,255,.15), transparent 28%),
+        linear-gradient(180deg, #f7fbff, #edf6ff);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: .95fr 1.05fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .visual-stack {
+      position: relative;
+      min-height: 520px;
+    }
+    .visual-card {
+      position: absolute;
+      border-radius: 34px;
+      background: white;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .visual-card.large {
+      left: 0;
+      top: 30px;
+      width: 78%;
+      height: 420px;
+      background:
+        linear-gradient(135deg, rgba(6,20,46,.82), rgba(20,92,255,.58)),
+        url('https://images.unsplash.com/photo-1593766827228-8737b4534aa6?auto=format&fit=crop&w=900&q=90') center/cover;
+    }
+    .visual-card.small {
+      right: 0;
+      bottom: 30px;
+      width: 56%;
+      padding: 24px;
+      background: linear-gradient(135deg, #ffffff, #eef6ff);
+    }
+    .visual-card.small h3 {
+      font-size: 34px;
+      letter-spacing: -.06em;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+    .visual-card.small p {
+      color: var(--muted);
+      line-height: 1.55;
+      font-weight: 700;
+    }
+    .about-content h2 {
+      color: var(--ink);
+      font-size: clamp(34px, 4vw, 56px);
+      letter-spacing: -.07em;
+      line-height: 1.05;
+      margin-bottom: 18px;
+    }
+    .about-content p {
+      color: var(--muted);
+      line-height: 1.82;
+      margin-bottom: 22px;
+    }
+    .features {
+      display: grid;
+      gap: 14px;
+      margin-top: 26px;
+    }
+    .feature {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 16px;
+      border-radius: 20px;
+      background: white;
+      border: 1px solid var(--line);
+      box-shadow: 0 14px 34px rgba(20,92,255,.08);
+      font-weight: 850;
+    }
+    .feature span {
+      width: 42px;
+      height: 42px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: linear-gradient(135deg, var(--blue), var(--sky));
+      font-weight: 900;
+    }
+
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 26px;
+    }
+    .blog {
+      padding: 26px;
+      border-radius: var(--radius);
+      background: white;
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 48px rgba(15,23,42,.08);
+      transition: .25s ease;
+    }
+    .blog:hover { transform: translateY(-7px); box-shadow: var(--shadow); }
+    .blog-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 18px;
+      color: white;
+      background: linear-gradient(135deg, var(--blue), var(--sky));
+      font-size: 24px;
+    }
+    .blog small { color: var(--blue); font-weight: 900; }
+    .blog h3 {
+      color: var(--ink);
+      font-size: 22px;
+      line-height: 1.18;
+      letter-spacing: -.045em;
+      margin: 10px 0;
+    }
+    .blog p { color: var(--muted); line-height: 1.7; font-size: 14px; }
+
+    .contact {
+      color: white;
+      background:
+        radial-gradient(circle at 78% 12%, rgba(54,215,255,.25), transparent 30%),
+        linear-gradient(135deg, rgba(6,20,46,.98), rgba(7,31,107,.9)),
+        url('https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=1800&q=90') center/cover;
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: .95fr 1.05fr;
+      gap: 40px;
+      align-items: start;
+    }
+    .contact h2 {
+      font-size: clamp(34px, 4vw, 56px);
+      letter-spacing: -.07em;
+      line-height: 1.05;
+      margin-bottom: 18px;
+    }
+    .contact p { color: #d9ecff; line-height: 1.75; margin-bottom: 24px; }
+    .contact-list { display: grid; gap: 12px; }
+    .contact-line {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.16);
+      font-weight: 850;
+    }
+    .form {
+      background: rgba(255,255,255,.96);
+      color: var(--text);
+      padding: 30px;
+      border-radius: 32px;
+      box-shadow: 0 26px 80px rgba(0,0,0,.23);
+    }
+    .form h3 { font-size: 28px; letter-spacing: -.05em; margin-bottom: 18px; color: var(--ink); }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-weight: 850; margin-bottom: 8px; }
+    .field input, .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 15px 16px;
+      font-family: inherit;
+      outline: none;
+      font-size: 15px;
+      background: #fbfdff;
+    }
+    .field input:focus, .field textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(20,92,255,.08);
+    }
+
+    .legal {
+      background: white;
+    }
+    .legal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 26px;
+    }
+    .legal-card {
+      padding: 34px;
+      border-radius: 30px;
+      background: #f7fbff;
+      border: 1px solid var(--line);
+    }
+    .legal-card h3 {
+      color: var(--blue-dark);
+      font-size: 28px;
+      letter-spacing: -.05em;
+      margin-bottom: 16px;
+    }
+    .legal-card p, .legal-card li {
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 10px;
+    }
+    .legal-card ul { padding-left: 20px; }
+
+    footer {
+      padding: 44px 0;
+      color: white;
+      background: var(--ink);
+    }
+    .footer-grid {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .footer-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      color: #d9ecff;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .reader {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      background: rgba(3, 10, 24, .82);
+      backdrop-filter: blur(12px);
+    }
+    .reader.active { display: grid; }
+    .reader-box {
+      width: min(980px, 96vw);
+      max-height: 92vh;
+      overflow: auto;
+      background: white;
+      border-radius: 30px;
+      box-shadow: 0 30px 100px rgba(0,0,0,.42);
+    }
+    .reader-head {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      padding: 18px 20px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: white;
+    }
+    .reader-head h3 { font-size: 20px; letter-spacing: -.035em; }
+    .close-btn {
+      border: 0;
+      background: rgba(255,255,255,.16);
+      color: white;
+      border-radius: 14px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+    .reader-content { padding: 28px; }
+    .read-page {
+      min-height: 650px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #f7fbff);
+      margin-bottom: 22px;
+      padding: 44px;
+    }
+    .read-page h4 {
+      color: var(--blue-dark);
+      font-size: 30px;
+      letter-spacing: -.055em;
+      margin-bottom: 18px;
+    }
+    .read-page p, .read-page li {
+      color: #42526b;
+      line-height: 1.8;
+      margin-bottom: 13px;
+    }
+    .read-page ul { padding-left: 22px; }
+
+   
+
+
+ 
+
+    .toast {
+      position: fixed;
+      z-index: 500;
+      right: 20px;
+      bottom: 20px;
+      padding: 16px 20px;
+      border-radius: 16px;
+      color: white;
+      background: var(--ink);
+      box-shadow: 0 18px 45px rgba(0,0,0,.25);
+      transform: translateY(120px);
+      opacity: 0;
+      transition: .25s ease;
+      font-weight: 900;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    @media(max-width: 980px) {
+      .hero-grid, .about-grid, .contact-grid { grid-template-columns: 1fr; }
+      .hero-panel { min-height: 530px; }
+      .ebooks-grid, .blog-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats, .legal-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media(max-width: 760px) {
+      .menu-btn { display: inline-flex; }
+      .nav-links {
+        position: absolute;
+        left: 0;
+        top: 78px;
+        width: 100%;
+        display: none;
+        flex-direction: column;
+        align-items: flex-start;
+        background: white;
+        padding: 20px 5%;
+        border-bottom: 1px solid var(--line);
+      }
+      .nav-links.active { display: flex; }
+      .nav-btn { width: 100%; text-align: center; }
+      .hero { min-height: auto; padding: 70px 0; }
+      .hero-panel { display: none; }
+      .ebooks-grid, .blog-grid, .stats, .legal-grid { grid-template-columns: 1fr; }
+      .actions { grid-template-columns: 1fr; }
+      section { padding: 70px 0; }
+      .visual-stack { min-height: 460px; }
+      .visual-card.large { width: 88%; height: 360px; }
+      .visual-card.small { width: 74%; }
+      .reader { padding: 12px; }
+      .read-page { padding: 26px; min-height: 560px; }
+    }
+  </style>
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18195861675"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-18195861675');
+</script>
+
+<!-- Event snippet for Contact conversion page -->
+<script>
+  gtag('event', 'conversion', {
+      'send_to': 'AW-18195861675/xPGgCPnDxrUcEKuhu-RD',
+      'value': 1.0,
+      'currency': 'EUR'
+  });
+</script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a href="#home" class="brand">
+        <span class="brand-icon"><strong>CF</strong></span>
+        Cricfast E-Books
+      </a>
+      <button class="menu-btn" onclick="toggleMenu()">Menu</button>
+      <nav class="nav-links" id="navLinks">
+        <a href="#home">Home</a>
+        <a href="#ebooks">E-Books</a>
+        <a href="#about">About</a>
+        <a href="#blogs">Blogs</a>
+        <a href="#contact">Contact</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#ebooks" class="nav-btn">Start Reading</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div>
+          <div class="pill">Digital Cricket Guides</div>
+          <h1>Fast Cricket Learning With <span>Cricfast E-Books</span></h1>
+          <p>A clean digital library for cricket learning. Read short guides online, download 5-page PDF books, and improve your understanding of batting, bowling, fielding, match planning, and practice routines.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#ebooks">View E-Books</a>
+            <a class="btn btn-glass" href="#blogs">Explore Articles</a>
+          </div>
+        </div>
+
+        <div class="hero-panel" aria-label="Cricfast E-Books preview">
+          <div class="mock-book one">
+            <h3>Quick Cricket Guide</h3>
+            <p>Simple chapters, clear practice points, and easy reading format.</p>
+            <div class="book-lines"><span></span><span></span><span></span></div>
+          </div>
+          <div class="mock-book two">
+            <h3>Skill Builder</h3>
+            <p>Focused cricket content for learning and daily improvement.</p>
+            <div class="book-lines"><span></span><span></span><span></span></div>
+          </div>
+          <div class="mock-book three">
+            <h3>Match Ready</h3>
+            <p>Practical cricket awareness for smarter performance.</p>
+            <div class="book-lines"><span></span><span></span><span></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="stats-wrap">
+      <div class="container">
+        <div class="stats">
+          <div class="stat"><h3>5</h3><p>Digital E-Books</p></div>
+          <div class="stat"><h3>25</h3><p>Total Pages</p></div>
+          <div class="stat"><h3>Read</h3><p>Online Preview</p></div>
+          <div class="stat"><h3>PDF</h3><p>Instant Download</p></div>
+        </div>
+      </div>
+    </div>
+
+    <section id="ebooks">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">Digital Library</div>
+          <h2>Choose Your Cricket Guide</h2>
+          <p>Every e-book uses different learning content and a clean blue cover style. No author or person name is used anywhere. Only Cricfast E-Books branding is included.</p>
+        </div>
+        <div class="ebooks-grid" id="ebookGrid"></div>
+      </div>
+    </section>
+
+    <section class="about" id="about">
+      <div class="container about-grid">
+        <div class="visual-stack">
+          <div class="visual-card large"></div>
+          <div class="visual-card small">
+            <h3>Cricfast</h3>
+            <p>Fast reading. Clean learning. Simple cricket improvement guides.</p>
+          </div>
+        </div>
+        <div class="about-content">
+          <div class="kicker">About Cricfast E-Books</div>
+          <h2>Built for clear cricket learning</h2>
+          <p>Cricfast E-Books is designed as a modern cricket learning website with a premium blue theme. The content is simple, direct, and useful for anyone who wants to understand cricket skills in a clean digital format.</p>
+          <p>The website includes online reading, PDF download, article sections, contact support, privacy policy, and terms pages in a single responsive layout.</p>
+          <div class="features">
+            <div class="feature"><span>01</span> Read short cricket e-books directly on the website</div>
+            <div class="feature"><span>02</span> Download clean 5-page PDF learning guides</div>
+            <div class="feature"><span>03</span> Blue premium sports theme with unique card covers</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="blogs">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">Learning Articles</div>
+          <h2>Cricket Knowledge Center</h2>
+          <p>Short article sections that support the e-book library and make the website more complete.</p>
+        </div>
+        <div class="blog-grid">
+          <article class="blog">
+            <div class="blog-icon">🏏</div>
+            <small>Skill Focus</small>
+            <h3>How short guides help cricket learning</h3>
+            <p>Short cricket guides are easier to read before practice and help players focus on one improvement area at a time.</p>
+          </article>
+          <article class="blog">
+            <div class="blog-icon">⚡</div>
+            <small>Practice</small>
+            <h3>Why simple routines improve consistency</h3>
+            <p>A fixed routine makes practice easier to follow and helps users build confidence through repeated learning.</p>
+          </article>
+          <article class="blog">
+            <div class="blog-icon">📘</div>
+            <small>Reading</small>
+            <h3>Benefits of reading before training</h3>
+            <p>Reading a short cricket guide before a session gives clear goals and keeps practice more structured.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="container contact-grid">
+        <div>
+          <div class="kicker" style="color:var(--sky);">Contact</div>
+          <h2>Need help with Cricfast E-Books?</h2>
+          <p>Use this section for e-book requests, support messages, content suggestions, or general website queries.</p>
+          <div class="contact-list">
+            <div class="contact-line">Email: support@cricfastebooks.com</div>
+            <div class="contact-line">Support Time: Monday to Saturday</div>
+            <div class="contact-line">Response: Usually within 24 hours</div>
+          </div>
+        </div>
+        <form class="form" onsubmit="submitForm(event)">
+          <h3>Send Message</h3>
+          <div class="field">
+            <label>Your Name</label>
+            <input type="text" placeholder="Enter your name" required>
+          </div>
+          <div class="field">
+            <label>Email Address</label>
+            <input type="email" placeholder="Enter your email" required>
+          </div>
+          <div class="field">
+            <label>Message</label>
+            <textarea rows="5" placeholder="Write your message" required></textarea>
+          </div>
+          <button class="btn btn-blue" type="submit">Submit Message</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="legal" id="privacy">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">Website Policies</div>
+          <h2>Privacy Policy & Terms</h2>
+          <p>Simple policy sections for your Cricfast E-Books website. You can edit these later based on final business requirements.</p>
+        </div>
+        <div class="legal-grid">
+          <div class="legal-card">
+            <h3>Privacy Policy</h3>
+            <p>Cricfast E-Books collects only basic information needed for support and website improvement.</p>
+            <ul>
+              <li>Contact form data may include name, email address, and message details.</li>
+              <li>User information is not sold or rented to third parties.</li>
+              <li>Download interactions may be counted to improve website performance.</li>
+              <li>Users can request updates or removal of submitted contact details.</li>
+            </ul>
+          </div>
+          <div class="legal-card" id="terms">
+            <h3>Terms & Conditions</h3>
+            <p>By using Cricfast E-Books, users agree to use the website content for personal learning and educational purposes.</p>
+            <ul>
+              <li>E-books are created for general cricket learning and reading.</li>
+              <li>PDF files should not be copied, resold, or redistributed without permission.</li>
+              <li>Website content may be changed, updated, or removed at any time.</li>
+              <li>Technical issues may depend on browser, device, or network conditions.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <a href="#home" class="brand" style="color:white;">
+        <span class="brand-icon"><strong>CF</strong></span>
+        Cricfast E-Books
+      </a>
+      <div class="footer-links">
+        <a href="#home">Home</a>
+        <a href="#ebooks">E-Books</a>
+        <a href="#about">About</a>
+        <a href="#blogs">Blogs</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#terms">Terms</a>
+      </div>
+      <p style="color:#d9ecff; font-weight:800;">© 2026 Cricfast E-Books. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+
+  <div class="reader" id="reader">
+    <div class="reader-box">
+      <div class="reader-head">
+        <h3 id="readerTitle">Cricfast E-Books</h3>
+        <button class="close-btn" onclick="closeReader()">Close</button>
+      </div>
+      <div class="reader-content" id="readerContent"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Done</div>
+
+  <script>
+    const ebooks = [
+      {
+        title: "Cricket Start Guide",
+        label: "Foundation",
+        color: "linear-gradient(135deg, #06142e, #145cff)",
+        description: "A short guide that explains cricket basics, playing roles, simple rules, and the first steps for structured learning.",
+        chapters: [
+          "Understanding Cricket Basics",
+          "Main Playing Roles",
+          "Simple Match Flow",
+          "Basic Ground Awareness",
+          "First Practice Checklist"
+        ]
+      },
+      {
+        title: "Batting Control Book",
+        label: "Batting",
+        color: "linear-gradient(135deg, #042b73, #36d7ff)",
+        description: "A clean batting guide focused on stance, bat swing, timing, footwork, and smart shot decisions during practice.",
+        chapters: [
+          "Stable Batting Stance",
+          "Smooth Bat Swing",
+          "Footwork Direction",
+          "Shot Timing Control",
+          "Practice With Purpose"
+        ]
+      },
+      {
+        title: "Bowling Line Manual",
+        label: "Bowling",
+        color: "linear-gradient(135deg, #081f5f, #145cff 55%, #36d7ff)",
+        description: "A focused bowling manual for rhythm, accuracy, target zones, delivery control, and simple workload planning.",
+        chapters: [
+          "Run-Up Rhythm",
+          "Target Zone Planning",
+          "Release Point Control",
+          "Accuracy Practice",
+          "Safe Bowling Volume"
+        ]
+      },
+      {
+        title: "Fielding Reaction Guide",
+        label: "Fielding",
+        color: "linear-gradient(135deg, #06142e, #0a7cff, #36d7ff)",
+        description: "A fielding guide for catching basics, ground movement, quick reactions, accurate throwing, and alert positioning.",
+        chapters: [
+          "Ready Body Position",
+          "Clean Catching Basics",
+          "Ground Ball Movement",
+          "Quick Throwing Steps",
+          "Field Awareness"
+        ]
+      },
+      {
+        title: "Match Thinking Notes",
+        label: "Strategy",
+        color: "linear-gradient(135deg, #030b1c, #145cff 60%, #5ee7ff)",
+        description: "A simple strategy guide for reading game situations, planning overs, rotating strike, and staying calm under pressure.",
+        chapters: [
+          "Reading Game Moments",
+          "Over-by-Over Planning",
+          "Smart Risk Selection",
+          "Strike Rotation Ideas",
+          "Calm Pressure Thinking"
+        ]
+      }
+    ];
+
+    const grid = document.getElementById('ebookGrid');
+
+    ebooks.forEach((book, index) => {
+      const item = document.createElement('article');
+      item.className = 'ebook';
+      item.innerHTML = `
+        <div class="cover" style="background:${book.color};">
+          <span class="cover-label">${book.label}</span>
+          <div class="cover-title"><h3>${book.title}</h3></div>
+          <div class="cover-bottom"><span>Cricfast E-Books</span><span>5 Pages</span></div>
+        </div>
+        <div class="ebook-body">
+          <h3>${book.title}</h3>
+          <p>${book.description}</p>
+          <div class="meta"><span>Read Online</span><span>PDF Download</span></div>
+          <div class="actions">
+            <button class="btn btn-outline" onclick="openReader(${index})">Read</button>
+            <button class="btn btn-blue" onclick="downloadPDF(${index})">Download</button>
+          </div>
+        </div>
+      `;
+      grid.appendChild(item);
+    });
+
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('active');
+    }
+
+   
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2600);
+    }
+
+    function submitForm(event) {
+      event.preventDefault();
+      event.target.reset();
+      showToast('Message submitted successfully');
+    }
+
+    function openReader(index) {
+      const book = ebooks[index];
+      document.getElementById('readerTitle').textContent = book.title;
+      const container = document.getElementById('readerContent');
+      container.innerHTML = '';
+
+      for (let page = 0; page < 5; page++) {
+        const heading = page === 0 ? book.title : book.chapters[page];
+        const div = document.createElement('div');
+        div.className = 'read-page';
+        div.innerHTML = `
+          <h4>Page ${page + 1}: ${heading}</h4>
+          <p>${page === 0 ? book.description : `${heading} explains a focused cricket learning topic in a simple and direct way. Read the point carefully and apply it during practice sessions.`}</p>
+          <p>Cricfast E-Books keeps every guide short so users can read quickly and remember the most important ideas before training or match preparation.</p>
+          <ul>
+            <li>Focus on one learning point at a time.</li>
+            <li>Practice slowly before increasing speed.</li>
+            <li>Review mistakes after every session.</li>
+            <li>Use simple plans instead of overthinking.</li>
+          </ul>
+          <p>Consistent small improvements can build better cricket understanding over time.</p>
+        `;
+        container.appendChild(div);
+      }
+
+      document.getElementById('reader').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeReader() {
+      document.getElementById('reader').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    function downloadPDF(index) {
+      const { jsPDF } = window.jspdf;
+      const book = ebooks[index];
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+
+      function addHeader(pageNo) {
+        doc.setFillColor(20, 92, 255);
+        doc.rect(0, 0, pageWidth, 30, 'F');
+        doc.setTextColor(255,255,255);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(15);
+        doc.text('Cricfast E-Books', 14, 18);
+        doc.setFontSize(10);
+        doc.text(`Page ${pageNo} of 5`, pageWidth - 38, 18);
+      }
+
+      function addFooter() {
+        doc.setTextColor(118, 130, 150);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.text('Cricfast E-Books | Digital Cricket Guide', 14, pageHeight - 12);
+      }
+
+      function wrap(text, x, y, maxWidth, lineHeight) {
+        const lines = doc.splitTextToSize(text, maxWidth);
+        doc.text(lines, x, y);
+        return y + lines.length * lineHeight;
+      }
+
+      for (let page = 0; page < 5; page++) {
+        if (page > 0) doc.addPage();
+        addHeader(page + 1);
+        addFooter();
+
+        const heading = page === 0 ? book.title : book.chapters[page];
+        doc.setTextColor(6, 20, 46);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(24);
+        doc.text(heading, 14, 52);
+        doc.setDrawColor(54, 215, 255);
+        doc.setLineWidth(1.2);
+        doc.line(14, 60, 92, 60);
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(12);
+        doc.setTextColor(62, 78, 104);
+        let y = 78;
+
+        const content = page === 0 ? [
+          book.description,
+          'This guide is part of the Cricfast E-Books digital cricket library. The content is short, clean, and useful for quick cricket learning.',
+          'Inside this e-book:',
+          ...book.chapters.map((chapter, i) => `${i + 1}. ${chapter}`)
+        ] : [
+          `${heading} is a focused cricket learning topic. The aim is to keep the concept simple so it can be applied during real practice.`,
+          'Start with basic control, then slowly increase speed, pressure, and match-like situations. Smart repetition helps build confidence.',
+          'Practice Note: Select one point from this page and repeat it in short practice blocks. Review what improved and what needs correction.',
+          'Match Note: Stay calm, keep the plan simple, and make decisions based on the situation.'
+        ];
+
+        content.forEach(text => {
+          if (text === 'Inside this e-book:') {
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(20, 92, 255);
+            doc.text(text, 14, y);
+            y += 10;
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(62, 78, 104);
+          } else {
+            y = wrap(text, 14, y, 180, 7);
+            y += 8;
+          }
+        });
+      }
+
+      const fileName = book.title.toLowerCase().replaceAll(' ', '-') + '.pdf';
+      doc.save(fileName);
+      showToast(`${book.title} PDF download started`);
+    }
+  </script>
+</body>
+</html>
